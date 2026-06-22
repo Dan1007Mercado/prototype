@@ -1,0 +1,14 @@
+[
+  {
+    "id": "survey-001",
+    "title": "Student Satisfaction Survey",
+    "status": "active",
+    "responses": 248
+  },
+  {
+    "id": "survey-002",
+    "title": "Community Health Assessment",
+    "status": "draft",
+    "responses": 0
+  }
+]

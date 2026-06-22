@@ -1,0 +1,9 @@
+.chart-placeholder {
+    min-height: 260px;
+    display: grid;
+    place-items: center;
+    color: #64748b;
+    background: linear-gradient(180deg, #ffffff, #f8fafc);
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+}

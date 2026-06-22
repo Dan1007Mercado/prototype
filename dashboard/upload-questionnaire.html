@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Questionnaire | TalaanScan</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/upload.css">
+    <link rel="stylesheet" href="../css/wizard.css">
+</head>
+<body class="dashboard-layout">
+
+    <main class="main-content">
+        <header class="top-navbar">
+            <div class="nav-left">
+                <button id="mobileMenuBtn" class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
+                <div class="breadcrumbs">
+                    <a href="dashboard.html">Home</a> <i class="fas fa-chevron-right"></i>
+                    <a href="conversion-dashboard.html">AI Conversion</a> <i class="fas fa-chevron-right"></i>
+                    <span class="current">Upload</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="page-container max-w-4xl">
+            <div class="page-header">
+                <h1 class="page-title">Convert Paper to Digital Survey</h1>
+                <p class="page-subtitle">Upload a blank PDF or Image of your questionnaire. Our AI will automatically detect questions, structure, and create a mobile OMR template.</p>
+            </div>
+
+            <div class="wizard-container content-card">
+                <div class="stepper">
+                    <div class="step active">
+                        <div class="step-icon">1</div>
+                        <span>Upload File</span>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step">
+                        <div class="step-icon">2</div>
+                        <span>AI Analysis</span>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step">
+                        <div class="step-icon">3</div>
+                        <span>Review & Edit</span>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step">
+                        <div class="step-icon">4</div>
+                        <span>Generate Assets</span>
+                    </div>
+                </div>
+
+                <div class="wizard-content" id="step1">
+                    <div class="upload-zone" id="dropZone">
+                        <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                        <h3>Drag & Drop your file here</h3>
+                        <p class="text-muted">or click to browse your computer</p>
+                        <input type="file" id="fileInput" hidden accept=".pdf,.jpg,.jpeg,.png">
+                        <button class="btn btn-outline mt-3" onclick="document.getElementById('fileInput').click()">Browse Files</button>
+                        <div class="upload-requirements mt-4">
+                            <p><i class="fas fa-info-circle"></i> Supported formats: PDF, JPG, PNG (Max 10MB)</p>
+                            <p><i class="fas fa-info-circle"></i> Ensure the document is clear, straight, and well-lit.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="wizard-actions flex-end mt-4">
+                        <button class="btn btn-primary" id="startConversionBtn" disabled>Start AI Conversion <i class="fas fa-arrow-right ml-2"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="../js/app.js"></script>
+    <script src="../js/upload-questionnaire.js"></script>
+</body>
+</html>

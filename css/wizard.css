@@ -1,0 +1,19 @@
+.stepper {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.step {
+    flex: 1;
+    padding: 10px;
+    border-radius: 8px;
+    background: #e2e8f0;
+    font-weight: 700;
+    text-align: center;
+}
+
+.step.active {
+    background: #2563eb;
+    color: #ffffff;
+}

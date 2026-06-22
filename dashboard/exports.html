@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Export Center | TalaanScan</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <style>
+        .export-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-top: 24px; }
+        .export-card { border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; background: var(--bg-surface); transition: 0.3s; display: flex; flex-direction: column; }
+        .export-card:hover { border-color: var(--primary); box-shadow: var(--shadow-md); }
+        .export-icon { font-size: 2.5rem; margin-bottom: 16px; }
+        .icon-csv { color: #10B981; }
+        .icon-json { color: #F59E0B; }
+        .icon-spss { color: #3B82F6; }
+    </style>
+</head>
+<body class="dashboard-layout">
+
+    <main class="main-content">
+        <header class="top-navbar">
+            <div class="breadcrumbs">
+                <a href="dashboard.html">Home</a> <i class="fas fa-chevron-right"></i>
+                <span class="current">Export Center</span>
+            </div>
+        </header>
+
+        <div class="page-container">
+            <div class="page-header mb-4">
+                <h1 class="page-title">Data Export</h1>
+                <p class="page-subtitle">Download your cleaned and aggregated survey responses.</p>
+            </div>
+
+            <div class="content-card mb-4">
+                <div class="form-group">
+                    <label class="form-label">Step 1: Select Survey Campaign</label>
+                    <select class="form-select max-w-4xl" id="surveySelect">
+                        <option value="">-- Choose a survey to export --</option>
+                        <option value="1">Regional Health Census 2026 (4,102 Responses)</option>
+                        <option value="2">Student Evaluation Fall (890 Responses)</option>
+                    </select>
+                </div>
+            </div>
+
+            <h3 class="mt-5 mb-3">Step 2: Choose Format</h3>
+            <div class="export-grid">
+                <div class="export-card">
+                    <i class="fas fa-file-csv export-icon icon-csv"></i>
+                    <h3>CSV / Excel</h3>
+                    <p class="text-muted text-sm mt-2 flex-grow-1" style="flex-grow: 1;">Standard tabular format, ideal for Microsoft Excel, Google Sheets, or basic database imports.</p>
+                    <button class="btn btn-outline w-100 mt-4">Download .csv</button>
+                </div>
+
+                <div class="export-card">
+                    <i class="fas fa-file-code export-icon icon-json"></i>
+                    <h3>JSON Format</h3>
+                    <p class="text-muted text-sm mt-2 flex-grow-1" style="flex-grow: 1;">Hierarchical data structure, best for developers integrating TalaanScan data with custom APIs.</p>
+                    <button class="btn btn-outline w-100 mt-4">Download .json</button>
+                </div>
+
+                <div class="export-card">
+                    <i class="fas fa-chart-pie export-icon icon-spss"></i>
+                    <h3>SPSS Compatible</h3>
+                    <p class="text-muted text-sm mt-2 flex-grow-1" style="flex-grow: 1;">Pre-formatted headers and encoded values ready for advanced statistical analysis software.</p>
+                    <button class="btn btn-outline w-100 mt-4">Download .sav format</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="../js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | TalaanScan</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/components.css">
+</head>
+<body class="dashboard-layout">
+
+    <main class="main-content">
+        <header class="top-navbar">
+            <div class="breadcrumbs">
+                <span class="current">Dashboard Overview</span>
+            </div>
+            <div class="nav-right" style="display: flex; gap: 16px; align-items: center;">
+                <button class="btn-icon"><i class="fas fa-search"></i></button>
+                <button class="btn-icon"><i class="fas fa-bell"></i></button>
+                <div style="width: 36px; height: 36px; border-radius: 50%; overflow: hidden; border: 2px solid var(--border-color);">
+                    <img src="https://placehold.co/36x36/2563EB/FFFFFF?text=AD" alt="Admin" style="width: 100%; height: 100%;">
+                </div>
+            </div>
+        </header>
+
+        <div class="page-container">
+            <div class="page-header flex-between align-center mb-4">
+                <div>
+                    <h1 class="page-title">Welcome back, Admin!</h1>
+                    <p class="page-subtitle">Here is what's happening with your surveys today.</p>
+                </div>
+                <div style="display: flex; gap: 12px;">
+                    <a href="upload-questionnaire.html" class="btn btn-outline"><i class="fas fa-magic"></i> AI Convert</a>
+                    <a href="create-survey.html" class="btn btn-primary"><i class="fas fa-plus"></i> New Survey</a>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #E0E7FF; color: var(--primary);"><i class="fas fa-clipboard-list"></i></div>
+                    <div class="stat-details">
+                        <h3>Active Surveys</h3>
+                        <p class="stat-value" id="metricActiveSurveys">0</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #DCFCE7; color: #10B981;"><i class="fas fa-users"></i></div>
+                    <div class="stat-details">
+                        <h3>Total Responses</h3>
+                        <p class="stat-value" id="metricResponses">0</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #FEF3C7; color: #F59E0B;"><i class="fas fa-file-alt"></i></div>
+                    <div class="stat-details">
+                        <h3>OMR Templates</h3>
+                        <p class="stat-value" id="metricTemplates">0</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #EDE9FE; color: #7C3AED;"><i class="fas fa-wand-magic-sparkles"></i></div>
+                    <div class="stat-details">
+                        <h3>Conversions</h3>
+                        <p class="stat-value" id="metricConversions">0</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid-layout">
+                <div class="content-card">
+                    <div class="flex-between mb-4">
+                        <h2>Recent Surveys</h2>
+                        <a href="surveys.html" class="btn btn-outline btn-sm">View All</a>
+                    </div>
+                    <div style="overflow-x: auto;">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Survey Name</th>
+                                    <th>Status</th>
+                                    <th>Responses</th>
+                                    <th>Created</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dashboardRecentSurveys"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <div class="flex-between mb-4">
+                        <h2>Recent Activity</h2>
+                        <a href="conversion-dashboard.html" class="btn btn-outline btn-sm">Queue</a>
+                    </div>
+                    <div id="dashboardActivity" class="activity-list"></div>
+                    <a href="upload-questionnaire.html" class="btn btn-primary w-100" style="margin-top: 20px;">Convert Questionnaire <i class="fas fa-arrow-right ml-2"></i></a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="../js/app.js"></script>
+    <script src="../js/dashboard.js"></script>
+</body>
+</html>

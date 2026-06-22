@@ -1,0 +1,237 @@
+<!-- dashboard/create-survey.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Survey | TalaanScan</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/components.css">
+    
+    <style>
+        /* === Mobile Sidebar Overrides === */
+        .mobile-only { display: none; }
+        
+        /* === Submenu Styles === */
+        .has-submenu { position: relative; }
+        .submenu { 
+            display: none; 
+            flex-direction: column;
+            background: #F8FAFC;
+        }
+        .submenu li { margin: 0; }
+        .submenu a { 
+            padding: 8px 24px 8px 48px; 
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+        .submenu a:hover { 
+            background: #EFF6FF;
+            color: var(--primary);
+        }
+        .submenu-toggle { cursor: pointer; }
+        .has-submenu.active .submenu { display: flex; }
+        .submenu-toggle i:last-child { transition: transform 0.2s; }
+        .has-submenu.active .submenu-toggle i:last-child { transform: rotate(180deg); }
+        
+        @media (max-width: 768px) {
+            .sidebar { position: fixed; left: -260px; height: 100vh; z-index: 1000; transition: 0.3s; box-shadow: 2px 0 10px rgba(0,0,0,0.1); }
+            .sidebar.mobile-open { left: 0; }
+            .mobile-only { display: block !important; }
+            .mobile-menu-btn { display: block; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-main); }
+            .nav-left { display: flex; align-items: center; }
+            .page-container { padding: 20px; }
+            .page-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+            .sidebar-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 99; display: none; }
+            .sidebar-overlay.mobile-open { display: block; }
+        }
+    </style>
+<body class="dashboard-layout">
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header flex-between">
+            <div style="display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.25rem; color: var(--primary);">
+                <i class="fas fa-qrcode"></i> TalaanScan
+            </div>
+            <button id="closeSidebar" class="btn-icon mobile-only" style="display: none;"><i class="fas fa-times"></i></button>
+        </div>
+
+        <nav class="sidebar-nav">
+            <ul class="nav-list">
+                <li>
+                    <a href="dashboard.html" class="nav-link">
+                        <i class="fas fa-home"></i> Overview
+                    </a>
+                </li>
+
+                <li class="nav-section-title">Data Collection</li>
+                <li class="has-submenu active">
+                    <a href="surveys.html" class="nav-link submenu-toggle">
+                        <i class="fas fa-clipboard-list"></i> Surveys
+                        <i class="fas fa-chevron-down" style="margin-left: auto; font-size: 0.8rem;"></i>
+                    </a>
+                    <ul class="submenu">
+                        
+                        <li><a href="create-survey.html" class="active">Create New</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="responses.html" class="nav-link">
+                        <i class="fas fa-inbox"></i> Responses <span class="badge-status status-processing" style="margin-left: auto; font-size: 0.7rem;">New</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="analytics.html" class="nav-link">
+                        <i class="fas fa-chart-pie"></i> Analytics
+                    </a>
+                </li>
+
+                <li class="nav-section-title">Form Engine</li>
+                <li class="has-submenu">
+                    <a href="conversion-dashboard.html" class="nav-link submenu-toggle">
+                        <i class="fas fa-magic"></i> AI Conversion
+                        <i class="fas fa-chevron-down" style="margin-left: auto; font-size: 0.8rem;"></i>
+                    </a>
+                    <ul class="submenu">
+                        <li><a href="conversion-dashboard.html">AI Dashboard</a></li>
+                        <li><a href="upload-questionnaire.html">Convert Document</a></li>
+                        <li><a href="conversion-history.html">History Log</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="templates.html" class="nav-link">
+                        <i class="fas fa-file-alt"></i> OMR Templates
+                    </a>
+                </li>
+
+                <li class="nav-section-title">Administration</li>
+                <li>
+                    <a href="users.html" class="nav-link">
+                        <i class="fas fa-users"></i> users
+                    </a>
+                </li>
+                <li>
+                    <a href="exports.html" class="nav-link">
+                        <i class="fas fa-file-export"></i> Data Export
+                    </a>
+                </li>
+                <li>
+                    <a href="settings.html" class="nav-link">
+                        <i class="fas fa-cog"></i> Settings
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        
+        <div style="padding: 20px 24px; border-top: 1px solid var(--border-color); display: flex; align-items: center; gap: 12px;">
+            <div style="width: 36px; height: 36px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: 600;">
+                AD
+            </div>
+            <div>
+                <div style="font-weight: 600; font-size: 0.9rem;">Admin User</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">Log out</div>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="top-navbar">
+            <div class="nav-left">
+                <button id="mobileMenuBtn" class="mobile-menu-btn" style="display: none;"><i class="fas fa-bars"></i></button>
+                <div class="breadcrumbs">
+                    <a href="dashboard.html">Home</a> <i class="fas fa-chevron-right"></i>
+                    <a href="surveys.html">Surveys</a> <i class="fas fa-chevron-right"></i>
+                    <span class="current">Create</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="page-container max-w-4xl">
+            <div class="page-header mb-4">
+                <h1 class="page-title">Deploy New Survey</h1>
+                <p class="page-subtitle">Configure campaign settings and attach an OMR template.</p>
+            </div>
+
+            <form class="content-card" id="createSurveyForm">
+                
+                <div class="form-group mb-4">
+                    <label class="form-label">Survey Title *</label>
+                    <input type="text" class="form-input" placeholder="e.g., Regional Health Census 2026" required>
+                </div>
+
+                <div class="form-group mb-4">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-input" rows="3" placeholder="Brief description of this data collection campaign..."></textarea>
+                </div>
+
+                <div class="grid-2-col mb-4">
+                    <div class="form-group">
+                        <label class="form-label">Select OMR Template *</label>
+                        <select class="form-select" required>
+                            <option value="">-- Choose a template --</option>
+                            <option value="1">Health_Survey_v2 (Converted by AI)</option>
+                            <option value="2">Standard_Evaluation_Form</option>
+                            <option value="3">Blank_Multiple_Choice_50</option>
+                        </select>
+                        <small class="text-muted mt-2" style="display: block;">Don't have a template? <a href="upload-questionnaire.html" class="text-primary">Convert a paper form here</a>.</small>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Target Response Count</label>
+                        <input type="number" class="form-input" placeholder="e.g., 5000">
+                    </div>
+                </div>
+
+                <div class="grid-2-col mb-4">
+                    <div class="form-group">
+                        <label class="form-label">Start Date</label>
+                        <input type="date" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">End Date</label>
+                        <input type="date" class="form-input">
+                    </div>
+                </div>
+
+                
+
+
+                <div class="flex-end mt-5" style="gap: 16px;">
+                    <button type="button" class="btn btn-outline" onclick="window.location.href='surveys.html'">Cancel</button>
+                    <button type="button" class="btn btn-outline">Save as Draft</button>
+                    <button type="submit" class="btn btn-primary">Deploy Campaign <i class="fas fa-rocket ml-2"></i></button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script src="../js/app.js"></script>
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+        const openBtn = document.getElementById('mobileMenuBtn');
+        const closeBtn = document.getElementById('closeSidebar');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('mobile-open');
+            if (overlay) overlay.classList.toggle('mobile-open');
+        }
+
+        if (openBtn) openBtn.addEventListener('click', toggleSidebar);
+        if (closeBtn) closeBtn.addEventListener('click', toggleSidebar);
+        if (overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // Submenu toggle functionality
+        document.querySelectorAll('.submenu-toggle').forEach(toggle => {
+            toggle.addEventListener('click', function(e) {
+                const parent = this.parentElement;
+                parent.classList.toggle('active');
+            });
+        });
+    </script>
+</body>
+</html>

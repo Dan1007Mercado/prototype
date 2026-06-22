@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TalaanScan | Mobile OMR Survey System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* === Global & Variables === */
+        :root {
+            --primary: #2563EB;
+            --primary-hover: #1D4ED8;
+            --text-main: #1E293B;
+            --text-muted: #64748B;
+            --bg-light: #F8FAFC;
+            --white: #FFFFFF;
+            --transition: all 0.3s ease;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+            background: var(--white);
+        }
+
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+        .section-padding { padding: 80px 0; }
+        .text-gradient { background: linear-gradient(90deg, #2563EB, #3B82F6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        /* === Buttons === */
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 24px; border-radius: 6px; font-weight: 500; cursor: pointer; transition: var(--transition); border: 2px solid transparent; }
+        .btn-primary { background: var(--primary); color: var(--white); }
+        .btn-primary:hover { background: var(--primary-hover); }
+        .btn-outline { border-color: var(--primary); color: var(--primary); background: transparent; }
+        .btn-outline:hover { background: var(--primary); color: var(--white); }
+        .btn-large { padding: 14px 32px; font-size: 1.1rem; }
+
+        /* === Navbar === */
+        .navbar { position: fixed; top: 0; width: 100%; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); z-index: 1000; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .nav-container { display: flex; justify-content: space-between; align-items: center; height: 72px; }
+        .brand { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 1.25rem; color: var(--primary); }
+        .brand-logo { border-radius: 8px; }
+        .nav-menu { display: flex; align-items: center; gap: 32px; }
+        .nav-links { display: flex; gap: 24px; font-weight: 500; color: var(--text-muted); }
+        .nav-links a:hover { color: var(--primary); }
+        .nav-buttons { display: flex; gap: 12px; }
+        .hamburger { display: none; font-size: 1.5rem; cursor: pointer; color: var(--text-main); }
+
+        /* === Hero Section === */
+        .hero { padding: 140px 0 80px; background: linear-gradient(to bottom right, #eff6ff, #ffffff); }
+        .hero-container { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+        .hero-content h1 { font-size: 3rem; font-weight: 800; line-height: 1.2; margin-bottom: 24px; }
+        .hero-content p { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 32px; }
+        .hero-cta { display: flex; gap: 16px; flex-wrap: wrap; }
+
+        /* === Hero Slider === */
+        .slider { position: relative; border-radius: 16px; overflow: hidden; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); aspect-ratio: 4/3; }
+        .slide { position: absolute; inset: 0; opacity: 0; transition: opacity 0.5s ease-in-out; }
+        .slide.active { opacity: 1; z-index: 1; }
+        .slide img { width: 100%; height: 100%; object-fit: cover; }
+        .slide-overlay { position: absolute; bottom: 0; left: 0; right: 0; padding: 32px; background: linear-gradient(transparent, rgba(0,0,0,0.8)); color: var(--white); }
+        .slider-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.8); border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; z-index: 2; transition: var(--transition); }
+        .slider-btn:hover { background: var(--white); }
+        .prev-btn { left: 16px; }
+        .next-btn { right: 16px; }
+        .slider-dots { position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 2; }
+        .dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.5); cursor: pointer; }
+        .dot.active { background: var(--white); }
+
+        /* === Features Section === */
+        .section-header { text-align: center; margin-bottom: 48px; }
+        .section-header h2 { font-size: 2.25rem; font-weight: 700; margin-bottom: 12px; }
+        .section-header p { color: var(--text-muted); font-size: 1.1rem; }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 32px; }
+        .feature-card { background: var(--bg-light); padding: 32px; border-radius: 12px; transition: var(--transition); border: 1px solid #E2E8F0; }
+        .feature-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); border-color: var(--primary); }
+        .feature-icon { width: 48px; height: 48px; background: #DBEAFE; color: var(--primary); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 20px; }
+        .feature-card h3 { margin-bottom: 12px; font-size: 1.25rem; }
+        .feature-card p { color: var(--text-muted); }
+
+        /* === Statistics Section === */
+        .statistics { background: var(--primary); color: var(--white); text-align: center; }
+        .stats-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 32px; }
+        .stat-item h2 { font-size: 3rem; display: inline-block; }
+        .stat-item span { font-size: 2.5rem; font-weight: 700; color: #93C5FD; }
+        .stat-item p { font-size: 1.1rem; opacity: 0.9; }
+
+        /* === Timeline / How It Works === */
+        .timeline { max-width: 800px; margin: 0 auto; position: relative; }
+        .timeline::before { content: ''; position: absolute; left: 24px; top: 0; bottom: 0; width: 2px; background: #E2E8F0; }
+        .timeline-item { display: flex; gap: 32px; margin-bottom: 48px; position: relative; }
+        .timeline-dot { width: 50px; height: 50px; background: var(--primary); color: var(--white); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.25rem; z-index: 1; flex-shrink: 0; }
+        .timeline-content { background: var(--bg-light); padding: 24px; border-radius: 12px; flex-grow: 1; border: 1px solid #E2E8F0; }
+        .timeline-content h3 { margin-bottom: 8px; color: var(--primary); }
+
+        /* === Testimonials === */
+        .testimonials { background: var(--bg-light); }
+        .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 32px; }
+        .testimonial-card { background: var(--white); padding: 32px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        .stars { color: #F59E0B; margin-bottom: 16px; font-size: 0.9rem; }
+        .testimonial-card p { font-style: italic; color: var(--text-muted); margin-bottom: 24px; }
+        .user-info { display: flex; align-items: center; gap: 16px; }
+        .user-info img { border-radius: 50%; }
+        .user-info h4 { font-size: 1rem; }
+        .user-info span { font-size: 0.85rem; color: var(--text-muted); }
+
+        /* === CTA Banner === */
+        .cta-banner { background: #1E293B; color: var(--white); padding: 64px 32px; border-radius: 24px; text-align: center; }
+        .cta-banner h2 { font-size: 2.5rem; margin-bottom: 16px; }
+        .cta-banner p { color: #94A3B8; font-size: 1.2rem; margin-bottom: 32px; }
+        .cta-buttons { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
+        .cta-outline { border-color: var(--white); color: var(--white); }
+        .cta-outline:hover { background: var(--white); color: #1E293B; }
+
+        /* === Footer === */
+        .footer { background: var(--text-main); color: var(--white); padding: 80px 0 24px; }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 64px; }
+        .footer-brand p { color: #94A3B8; margin: 16px 0; }
+        .social-icons { display: flex; gap: 16px; font-size: 1.25rem; }
+        .social-icons a:hover { color: #93C5FD; }
+        .footer-links h3 { margin-bottom: 20px; font-size: 1.1rem; }
+        .footer-links ul { display: flex; flex-direction: column; gap: 12px; }
+        .footer-links a { color: #94A3B8; transition: var(--transition); }
+        .footer-links a:hover { color: var(--white); }
+        .footer-contact p { color: #94A3B8; margin-bottom: 12px; display: flex; align-items: center; gap: 12px; }
+        .footer-bottom { text-align: center; color: #64748B; border-top: 1px solid #334155; padding-top: 24px; }
+
+        /* === Animations & Responsive === */
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        @media (max-width: 992px) {
+            .hero-container { grid-template-columns: 1fr; text-align: center; }
+            .hero-cta { justify-content: center; }
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu { display: none; position: absolute; top: 72px; left: 0; right: 0; background: var(--white); flex-direction: column; padding: 24px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+            .nav-menu.active { display: flex; }
+            .nav-links { flex-direction: column; text-align: center; }
+            .hamburger { display: block; }
+            .footer-grid { grid-template-columns: 1fr; }
+            .timeline::before { left: 20px; }
+            .timeline-dot { width: 40px; height: 40px; font-size: 1rem; }
+            .timeline-item { gap: 16px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar" id="navbar">
+        <div class="container nav-container">
+            <div class="brand">
+                <div style="background: var(--primary); color: white; width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
+                    <i class="fas fa-qrcode"></i>
+                </div>
+                <span class="brand-name">TalaanScan</span>
+            </div>
+            
+            <div class="nav-menu" id="nav-menu">
+                <ul class="nav-links">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#how-it-works">How It Works</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+                <div class="nav-buttons">
+                    <a href="login.html" class="btn btn-outline">Login</a>
+                    <a href="signup.html" class="btn btn-primary">Sign Up</a>
+                </div>
+            </div>
+            
+            <div class="hamburger" id="hamburger">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <section id="home" class="hero">
+            <div class="container hero-container">
+                <div class="hero-content reveal">
+                    <h1>Transform Paper Surveys Into <span class="text-gradient">Digital Data</span> Instantly</h1>
+                    <p>Scan, extract, and analyze questionnaire responses using advanced OMR technology directly from your smartphone.</p>
+                    <div class="hero-cta">
+                        <a href="signup.html" class="btn btn-primary btn-large">Get Started</a>
+                        <a href="#how-it-works" class="btn btn-outline btn-large play-btn"><i class="fas fa-play-circle"></i> Learn More</a>
+                    </div>
+                </div>
+                
+                <div class="hero-slider-container reveal">
+                    <div class="slider" id="hero-slider">
+                        <div class="slide active">
+                            <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Scanning">
+                            <div class="slide-overlay">
+                                <h3>Mobile OMR Scanning</h3>
+                                <p>Researcher scanning paper survey with high precision.</p>
+                            </div>
+                        </div>
+                        <div class="slide">
+                            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Analytics">
+                            <div class="slide-overlay">
+                                <h3>Data Analytics</h3>
+                                <p>Comprehensive dashboards for immediate insights.</p>
+                            </div>
+                        </div>
+                        <div class="slide">
+                            <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Processing">
+                            <div class="slide-overlay">
+                                <h3>Instant Processing</h3>
+                                <p>Highly accurate OMR bubble parsing algorithms.</p>
+                            </div>
+                        </div>
+
+                        <button class="slider-btn prev-btn" id="prevBtn"><i class="fas fa-chevron-left"></i></button>
+                        <button class="slider-btn next-btn" id="nextBtn"><i class="fas fa-chevron-right"></i></button>
+                        
+                        <div class="slider-dots" id="sliderDots">
+                            <span class="dot active" data-index="0"></span>
+                            <span class="dot" data-index="1"></span>
+                            <span class="dot" data-index="2"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="features section-padding">
+            <div class="container">
+                <div class="section-header reveal">
+                    <h2>Powerful Features for Researchers</h2>
+                    <p>Everything you need to digitize your data collection process.</p>
+                </div>
+                <div class="features-grid">
+                    <div class="feature-card reveal">
+                        <div class="feature-icon"><i class="fas fa-mobile-alt"></i></div>
+                        <h3>Mobile OMR Scanning</h3>
+                        <p>Turn your smartphone into a high-speed OMR scanner. No specialized hardware required.</p>
+                    </div>
+                    <div class="feature-card reveal" style="transition-delay: 0.1s;">
+                        <div class="feature-icon"><i class="fas fa-bolt"></i></div>
+                        <h3>Automatic Extraction</h3>
+                        <p>Instantly extract responses and export them directly to CSV, Excel, or SPSS formats.</p>
+                    </div>
+                    <div class="feature-card reveal" style="transition-delay: 0.2s;">
+                        <div class="feature-icon"><i class="fas fa-file-signature"></i></div>
+                        <h3>Template Creation</h3>
+                        <p>Design your own surveys with our easy-to-use drag and drop template builder.</p>
+                    </div>
+                    <div class="feature-card reveal" style="transition-delay: 0.3s;">
+                        <div class="feature-icon"><i class="fas fa-brain"></i></div>
+                        <h3>AI Recognition</h3>
+                        <p>Advanced AI recognizes standard formats even without pre-defined templates.</p>
+                    </div>
+                    <div class="feature-card reveal" style="transition-delay: 0.4s;">
+                        <div class="feature-icon"><i class="fas fa-wifi"></i></div>
+                        <h3>Offline Functionality</h3>
+                        <p>Conduct surveys in remote areas. Data syncs automatically when reconnected.</p>
+                    </div>
+                    <div class="feature-card reveal" style="transition-delay: 0.5s;">
+                        <div class="feature-icon"><i class="fas fa-chart-pie"></i></div>
+                        <h3>Research Analytics</h3>
+                        <p>Visualize your data instantly with built-in charts and descriptive statistics.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="statistics section-padding">
+            <div class="container stats-container">
+                <div class="stat-item reveal">
+                    <h2 class="counter" data-target="10000">0</h2><span>+</span>
+                    <p>Surveys Processed</p>
+                </div>
+                <div class="stat-item reveal" style="transition-delay: 0.1s;">
+                    <h2 class="counter" data-target="500">0</h2><span>+</span>
+                    <p>Researchers</p>
+                </div>
+                <div class="stat-item reveal" style="transition-delay: 0.2s;">
+                    <h2 class="counter" data-target="98">0</h2><span>%</span>
+                    <p>Recognition Accuracy</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="how-it-works" class="timeline-section section-padding">
+            <div class="container">
+                <div class="section-header reveal">
+                    <h2>How It Works</h2>
+                    <p>From paper to insights in five simple steps.</p>
+                </div>
+                <div class="timeline">
+                    <div class="timeline-item reveal">
+                        <div class="timeline-dot">1</div>
+                        <div class="timeline-content">
+                            <h3>Upload Survey</h3>
+                            <p>Print and distribute your customized questionnaire to your respondents.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item reveal">
+                        <div class="timeline-dot">2</div>
+                        <div class="timeline-content">
+                            <h3>Detect Questionnaire</h3>
+                            <p>Hover your smartphone camera over the completed paper. Our system instantly detects boundaries.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item reveal">
+                        <div class="timeline-dot">3</div>
+                        <div class="timeline-content">
+                            <h3>Recognize Responses</h3>
+                            <p>The OMR engine reads marked bubbles and handwritten text boxes with 98%+ accuracy.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="testimonials section-padding">
+            <div class="container">
+                <div class="section-header reveal">
+                    <h2>Trusted by Professionals</h2>
+                </div>
+                <div class="testimonials-grid">
+                    <div class="testimonial-card reveal">
+                        <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                        <p>"TalaanScan completely eliminated the manual data entry bottleneck in our regional health survey. We processed 2,000 forms in a fraction of the time."</p>
+                        <div class="user-info">
+                            <img src="https://placehold.co/50x50/2563EB/ffffff?text=DR" alt="Dr. Reyes">
+                            <div>
+                                <h4>Dr. Maria Reyes</h4>
+                                <span>Lead Researcher</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card reveal" style="transition-delay: 0.1s;">
+                        <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                        <p>"The offline functionality is a game-changer. Our enumerators could scan forms in remote villages without internet, and sync everything later."</p>
+                        <div class="user-info">
+                            <img src="https://placehold.co/50x50/2563EB/ffffff?text=JD" alt="John Doe">
+                            <div>
+                                <h4>John Doe</h4>
+                                <span>Field Coordinator</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta-section section-padding">
+            <div class="container reveal">
+                <div class="cta-banner">
+                    <h2>Ready to Modernize Survey Processing?</h2>
+                    <p>Join over 500 researchers saving time and reducing errors with TalaanScan.</p>
+                    <div class="cta-buttons">
+                        <a href="signup.html" class="btn btn-primary btn-large cta-btn">Start Free</a>
+                        <a href="#features" class="btn btn-outline btn-large cta-btn cta-outline">Learn More</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer id="contact" class="footer">
+        <div class="container footer-grid">
+            <div class="footer-brand">
+                <div class="brand" style="color: white; margin-bottom: 16px;">
+                    <i class="fas fa-qrcode" style="color: var(--primary);"></i> TalaanScan
+                </div>
+                <p>Advanced OMR technology for modern research and data collection.</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+            <div class="footer-links">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#how-it-works">How It Works</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h3>Resources</h3>
+                <ul>
+                    <li><a href="#">Documentation</a></li>
+                    <li><a href="#">Help Center</a></li>
+                    <li><a href="#">API Reference</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h3>Contact Us</h3>
+                <p><i class="fas fa-envelope"></i> hello@talaanscan.com</p>
+                <p><i class="fas fa-phone"></i> +1 (555) 123-4567</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 TalaanScan. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Combined JavaScript -->
+    <script>
+        // 1. Mobile Menu Toggle
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('nav-menu');
+        hamburger.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+
+        // 2. Image Slider Logic
+        const slides = document.querySelectorAll('.slide');
+        const dots = document.querySelectorAll('.dot');
+        let currentSlide = 0;
+
+        function showSlide(index) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            dots.forEach(dot => dot.classList.remove('active'));
+            slides[index].classList.add('active');
+            dots[index].classList.add('active');
+        }
+
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            currentSlide = (currentSlide + 1) % slides.length;
+            showSlide(currentSlide);
+        });
+
+        document.getElementById('prevBtn').addEventListener('click', () => {
+            currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+            showSlide(currentSlide);
+        });
+
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                currentSlide = index;
+                showSlide(currentSlide);
+            });
+        });
+
+        // Auto-advance slider
+        setInterval(() => {
+            currentSlide = (currentSlide + 1) % slides.length;
+            showSlide(currentSlide);
+        }, 5000);
+
+        // 3. Scroll Reveal & Number Counter Animations
+        const revealElements = document.querySelectorAll('.reveal');
+        const counters = document.querySelectorAll('.counter');
+
+        const observerOptions = { threshold: 0.1, rootMargin: "0px 0px -50px 0px" };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    
+                    // Trigger counter if the element contains one
+                    if (entry.target.classList.contains('stat-item') && !entry.target.classList.contains('counted')) {
+                        const counter = entry.target.querySelector('.counter');
+                        const target = +counter.getAttribute('data-target');
+                        const increment = target / 50; // Speed of counting
+                        let current = 0;
+
+                        const updateCounter = () => {
+                            current += increment;
+                            if (current < target) {
+                                counter.innerText = Math.ceil(current).toLocaleString();
+                                requestAnimationFrame(updateCounter);
+                            } else {
+                                counter.innerText = target.toLocaleString();
+                            }
+                        };
+                        updateCounter();
+                        entry.target.classList.add('counted');
+                    }
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        revealElements.forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>

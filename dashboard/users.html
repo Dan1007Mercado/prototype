@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Members | TalaanScan</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <style>
+        .modal-overlay { 
+            display: none; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            right: 0; 
+            bottom: 0; 
+            background: rgba(0, 0, 0, 0.5); 
+            z-index: 1000; 
+            align-items: center; 
+            justify-content: center;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-content { 
+            background: white; 
+            border-radius: 12px; 
+            padding: 28px; 
+            width: 90%; 
+            max-width: 450px; 
+            box-shadow: var(--shadow-lg); 
+            animation: modalSlideIn 0.3s ease-out;
+        }
+        @keyframes modalSlideIn { 
+            from { opacity: 0; transform: scale(0.95); } 
+            to { opacity: 1; transform: scale(1); } 
+        }
+        .modal-header { margin-bottom: 20px; }
+        .modal-title { font-size: 1.25rem; font-weight: 600; color: var(--text-main); margin: 0; }
+        .modal-body { margin-bottom: 24px; }
+        .form-group { margin-bottom: 16px; }
+        .form-label { display: block; font-weight: 500; color: var(--text-main); margin-bottom: 6px; font-size: 0.9rem; }
+        .form-input, .form-select { width: 100%; padding: 10px 12px; border: 1px solid var(--border-color); border-radius: 6px; font-family: inherit; font-size: 0.9rem; box-sizing: border-box; }
+        .form-input:focus, .form-select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
+        .modal-actions { display: flex; gap: 12px; justify-content: flex-end; }
+        .btn { padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; transition: 0.2s; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-dark); }
+        .btn-outline { background: white; border: 1px solid var(--border-color); color: var(--text-main); }
+        .btn-outline:hover { background: #F8FAFC; }
+    </style>
+<body class="dashboard-layout">
+
+    <main class="main-content">
+        <header class="top-navbar">
+            <div class="breadcrumbs">
+                <a href="dashboard.html">Home</a> <i class="fas fa-chevron-right"></i>
+                <span class="current">Team Members</span>
+            </div>
+        </header>
+
+        <div class="page-container">
+            <div class="page-header flex-between align-center mb-4">
+                <div>
+                    <h1 class="page-title">Team Members</h1>
+                    <p class="page-subtitle">Manage team members, roles, and access permissions.</p>
+                </div>
+                <button class="btn btn-primary" id="addTeamMemberBtn"><i class="fas fa-plus"></i> Add Team Member</button>
+            </div>
+
+            <div class="content-card">
+                <!-- Toolbar -->
+                <div class="flex-between mb-4 toolbar-grid" style="gap: 16px;">
+                    <div style="flex: 1; position: relative; max-width: 400px;">
+                        <i class="fas fa-search input-icon"></i>
+                        <input type="text" class="form-input with-icon" placeholder="Search team members...">
+                    </div>
+                    <div style="display: flex; gap: 12px;">
+                        <select class="form-select">
+                            <option value="all">All Roles</option>
+                            <option value="admin">Administrator</option>
+                            <option value="encoder">Encoder</option>
+                            <option value="viewer">Viewer</option>
+                        </select>
+                        <button class="btn btn-outline"><i class="fas fa-filter"></i> Filters</button>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Joined Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Admin User</td>
+                                <td>admin@talanscan.local</td>
+                                <td><span class="badge-status" style="background: #E0E7FF; color: #2563EB;">Administrator</span></td>
+                                <td><span class="badge-status" style="background: #DCFCE7; color: #166534;">Active</span></td>
+                                <td>2024-01-15</td>
+                                <td><button class="btn btn-outline btn-sm"><i class="fas fa-edit"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>Research Staff</td>
+                                <td>staff@talanscan.local</td>
+                                <td><span class="badge-status" style="background: #FEF3C7; color: #92400E;">Encoder</span></td>
+                                <td><span class="badge-status" style="background: #DCFCE7; color: #166534;">Active</span></td>
+                                <td>2024-02-20</td>
+                                <td><button class="btn btn-outline btn-sm"><i class="fas fa-edit"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>Field Officer</td>
+                                <td>officer@talanscan.local</td>
+                                <td><span class="badge-status" style="background: #DBEAFE; color: #0C4A6E;">Viewer</span></td>
+                                <td><span class="badge-status" style="background: #DCFCE7; color: #166534;">Active</span></td>
+                                <td>2024-03-10</td>
+                                <td><button class="btn btn-outline btn-sm"><i class="fas fa-edit"></i></button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Add Team Member Modal -->
+    <div class="modal-overlay" id="addTeamMemberModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Add Team Member</h2>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" class="form-input" id="memberName" placeholder="e.g., John Smith">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" class="form-input" id="memberEmail" placeholder="john@talanscan.local">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Role</label>
+                    <select class="form-select" id="memberRole">
+                        <option value="">Select a role...</option>
+                        <option value="Administrator">Administrator</option>
+                        <option value="Encoder">Encoder</option>
+                        <option value="Viewer">Viewer</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-outline" id="cancelAddBtn">Cancel</button>
+                <button class="btn btn-primary" id="saveAddBtn">Add Member</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/app.js"></script>
+    <script>
+        // Add Team Member Modal
+        const addTeamMemberBtn = document.getElementById('addTeamMemberBtn');
+        const addTeamMemberModal = document.getElementById('addTeamMemberModal');
+        const cancelAddBtn = document.getElementById('cancelAddBtn');
+        const saveAddBtn = document.getElementById('saveAddBtn');
+        const memberName = document.getElementById('memberName');
+        const memberEmail = document.getElementById('memberEmail');
+        const memberRole = document.getElementById('memberRole');
+
+        // Open modal
+        addTeamMemberBtn.addEventListener('click', () => {
+            addTeamMemberModal.classList.add('active');
+            memberName.focus();
+        });
+
+        // Close modal
+        function closeModal() {
+            addTeamMemberModal.classList.remove('active');
+            memberName.value = '';
+            memberEmail.value = '';
+            memberRole.value = '';
+        }
+
+        cancelAddBtn.addEventListener('click', closeModal);
+
+        // Close modal when clicking overlay
+        addTeamMemberModal.addEventListener('click', (e) => {
+            if (e.target === addTeamMemberModal) {
+                closeModal();
+            }
+        });
+
+        // Save team member
+        saveAddBtn.addEventListener('click', () => {
+            const name = memberName.value.trim();
+            const email = memberEmail.value.trim();
+            const role = memberRole.value;
+
+            if (!name) {
+                alert('Please enter a name.');
+                return;
+            }
+
+            if (!email) {
+                alert('Please enter an email address.');
+                return;
+            }
+
+            if (!role) {
+                alert('Please select a role.');
+                return;
+            }
+
+            // Validate email format
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('Please enter a valid email address.');
+                return;
+            }
+
+            // Add new row to table
+            const tableBody = document.querySelector('.data-table tbody');
+            const newRow = tableBody.insertRow();
+            newRow.innerHTML = `
+                <td>${name}</td>
+                <td>${email}</td>
+                <td><span class="badge-status" style="background: ${role === 'Administrator' ? '#E0E7FF; color: #2563EB' : role === 'Encoder' ? '#FEF3C7; color: #92400E' : '#DBEAFE; color: #0C4A6E'};">${role}</span></td>
+                <td><span class="badge-status" style="background: #DCFCE7; color: #166534;">Active</span></td>
+                <td>${new Date().toISOString().split('T')[0]}</td>
+                <td><button class="btn btn-outline btn-sm"><i class="fas fa-edit"></i></button></td>
+            `;
+
+            closeModal();
+            alert(`Team member "${name}" added successfully!`);
+        });
+
+        // Allow Enter key to save
+        memberRole.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                saveAddBtn.click();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversion Details | TalaanScan</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+</head>
+<body class="dashboard-layout">
+
+    <main class="main-content">
+        <header class="top-navbar">
+            <div class="breadcrumbs">
+                <a href="dashboard.html">Home</a> <i class="fas fa-chevron-right"></i>
+                <a href="conversion-history.html">Conversion History</a> <i class="fas fa-chevron-right"></i>
+                <span class="current">CV-9021</span>
+            </div>
+        </header>
+
+        <div class="page-container max-w-4xl">
+            <div class="page-header flex-between align-center mb-4">
+                <div>
+                    <h1 class="page-title" id="conversionFileName">Health_Survey_v2.pdf</h1>
+                    <p class="page-subtitle font-mono" id="conversionJobMeta">Job ID: CV-9021 - Jun 22, 2026</p>
+                </div>
+                <span class="badge-status status-completed" id="conversionStatus" style="font-size: 1rem;"><i class="fas fa-check-circle"></i> Completed Successfully</span>
+            </div>
+
+            <div class="grid-2-col mb-4">
+                <div class="content-card">
+                    <h3 class="mb-3">AI Telemetry</h3>
+                    <ul style="list-style: none; padding: 0; line-height: 2;">
+                        <li class="flex-between"><span>Model Used:</span> <strong>Gemini 1.5 Pro (Vision)</strong></li>
+                        <li class="flex-between"><span>Processing Time:</span> <strong>4.2 seconds</strong></li>
+                        <li class="flex-between"><span>Detected Pages:</span> <strong id="conversionPages">2 Pages</strong></li>
+                        <li class="flex-between"><span>Questions Extracted:</span> <strong>15 Items</strong></li>
+                        <li class="flex-between"><span>Overall Confidence:</span> <strong class="confidence-high" id="conversionConfidence">98.2%</strong></li>
+                    </ul>
+                </div>
+
+                <div class="content-card" style="background: var(--bg-main);">
+                    <h3 class="mb-3">Generated Artifacts</h3>
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <button class="btn btn-outline flex-between w-100">
+                            <span><i class="fas fa-qrcode text-primary"></i> Mobile OMR Template (.tsmpl)</span>
+                            <i class="fas fa-download"></i>
+                        </button>
+                        <button class="btn btn-outline flex-between w-100">
+                            <span><i class="fas fa-code text-warning"></i> Structured Schema (.json)</span>
+                            <i class="fas fa-download"></i>
+                        </button>
+                        <button class="btn btn-outline flex-between w-100">
+                            <span><i class="fas fa-image text-success"></i> Annotated Image Map (.png)</span>
+                            <i class="fas fa-download"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3 class="mb-3">Execution Log</h3>
+                <div style="background: #1E293B; color: #E2E8F0; padding: 16px; border-radius: 8px; font-family: monospace; font-size: 0.85rem; height: 200px; overflow-y: auto;">
+                    [14:30:01] System: Received file Health_Survey_v2.pdf (2.4MB)<br>
+                    [14:30:01] Pre-processor: Converting PDF pages to rasterized images...<br>
+                    [14:30:02] Gemini API: Initiating multimodal extraction prompt...<br>
+                    [14:30:04] Gemini API: Response received. Confidence heuristic: HIGH.<br>
+                    [14:30:04] Parser: Extracted 12 Multiple Choice, 3 OCR text boxes.<br>
+                    [14:30:05] Mapping: Calculating geometric bounding boxes for anchor tags.<br>
+                    [14:30:05] Generator: Building .tsmpl package...<br>
+                    [14:30:05] System: Conversion finished successfully.
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="../js/app.js"></script>
+    <script src="../js/conversion-details.js"></script>
+</body>
+</html>

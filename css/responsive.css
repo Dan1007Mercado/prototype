@@ -1,0 +1,66 @@
+/* css/responsive.css */
+
+/* Desktop (Already covered mostly in style.css up to 1440px) */
+
+/* Laptop (max 1024px) */
+@media screen and (max-width: 1024px) {
+    .hero-container { gap: 30px; }
+    .hero-content h1 { font-size: 3rem; }
+    .stats-container { grid-template-columns: repeat(2, 1fr); }
+    .footer-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* Tablet (max 768px) */
+@media screen and (max-width: 768px) {
+    /* Navbar Mobile Menu */
+    .hamburger { display: block; z-index: 1001; }
+    .nav-menu {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 80%;
+        height: 100vh;
+        background: var(--bg-main);
+        flex-direction: column;
+        justify-content: center;
+        transition: 0.4s ease;
+        box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+    }
+    .nav-menu.active { right: 0; }
+    .nav-links { flex-direction: column; text-align: center; gap: 40px; font-size: 1.25rem; }
+    .nav-buttons { flex-direction: column; width: 80%; }
+    
+    /* Hero */
+    .hero { padding-top: 120px; text-align: center; }
+    .hero-container { grid-template-columns: 1fr; }
+    .hero-content p { margin: 0 auto 30px; }
+    .hero-cta { justify-content: center; }
+    .hero-slider-container { height: 400px; }
+
+    /* Timeline */
+    .timeline::before { left: 30px; }
+    .timeline-item { width: 100%; padding-left: 80px; padding-right: 0; text-align: left !important; }
+    .timeline-item:nth-child(even), .timeline-item:nth-child(odd) { left: 0; }
+    .timeline-item:nth-child(even) .timeline-dot, .timeline-item:nth-child(odd) .timeline-dot { left: 10px; right: auto; }
+    
+    /* Testimonials */
+    .testimonials-grid { grid-template-columns: 1fr; }
+    
+    /* CTA */
+    .cta-buttons { flex-direction: column; }
+}
+
+/* Mobile (max 480px) */
+@media screen and (max-width: 480px) {
+    .hero-content h1 { font-size: 2.25rem; }
+    .hero-cta { flex-direction: column; }
+    .hero-slider-container { height: 300px; }
+    .section-header h2 { font-size: 2rem; }
+    .stats-container { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr; }
+    .cta-banner { padding: 40px 20px; }
+    .timeline-item { padding-left: 60px; }
+    .timeline::before { left: 20px; }
+    .timeline-dot { width: 30px; height: 30px; font-size: 0.875rem; }
+    .timeline-item:nth-child(even) .timeline-dot, .timeline-item:nth-child(odd) .timeline-dot { left: 5px; }
+}

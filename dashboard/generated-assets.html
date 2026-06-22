@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generated Assets | TalaanScan</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/wizard.css">
+    <style>
+        .success-header { text-align: center; padding: 40px 0; }
+        .success-icon { font-size: 4rem; color: #10B981; margin-bottom: 20px; }
+        .assets-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 30px; }
+        .asset-card { border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; text-align: center; background: var(--bg-surface); transition: 0.3s; }
+        .asset-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); border-color: var(--primary); }
+        .asset-icon { font-size: 2.5rem; color: var(--primary); margin-bottom: 16px; }
+    </style>
+</head>
+<body class="dashboard-layout">
+
+    <main class="main-content">
+        <header class="top-navbar">
+            <div class="breadcrumbs">
+                <a href="dashboard.html">Home</a> <i class="fas fa-chevron-right"></i>
+                <a href="conversion-dashboard.html">AI Conversion</a> <i class="fas fa-chevron-right"></i>
+                <span class="current">Assets</span>
+            </div>
+        </header>
+
+        <div class="page-container max-w-4xl">
+            <div class="content-card">
+                <div class="success-header">
+                    <i class="fas fa-check-circle success-icon"></i>
+                    <h2>Conversion Successful!</h2>
+                    <p class="text-muted mt-2"><span data-asset-file>Your paper questionnaire</span> has been successfully digitized. You can now download the required assets to use in the TalanScan mobile app or web platform.</p>
+                </div>
+
+                <div class="assets-grid">
+                    <div class="asset-card">
+                        <i class="fas fa-qrcode asset-icon"></i>
+                        <h3>OMR Mobile Template</h3>
+                        <p class="text-muted text-sm mt-2 mb-4">Contains anchor coordinates and bubble logic for the mobile app scanner.</p>
+                        <button class="btn btn-primary w-100" data-save-template><i class="fas fa-save"></i> Save Template</button>
+                    </div>
+
+                    <div class="asset-card">
+                        <i class="fas fa-code asset-icon"></i>
+                        <h3>JSON Data Schema</h3>
+                        <p class="text-muted text-sm mt-2 mb-4">The raw structured data of your survey for API integrations or database import.</p>
+                        <button class="btn btn-outline w-100"><i class="fas fa-download"></i> Download .json</button>
+                    </div>
+
+                    <div class="asset-card">
+                        <i class="fas fa-laptop-code asset-icon"></i>
+                        <h3>Digital Web Form</h3>
+                        <p class="text-muted text-sm mt-2 mb-4">A ready-to-share online version of your survey for respondents without paper.</p>
+                        <button class="btn btn-outline w-100" data-create-survey><i class="fas fa-plus"></i> Create Survey</button>
+                    </div>
+                </div>
+
+                <div class="flex-center mt-5">
+                    <a href="conversion-dashboard.html" class="btn btn-outline">Return to Dashboard</a>
+                    <a href="surveys.html" class="btn btn-primary" style="margin-left: 12px;">View Surveys</a>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="../js/app.js"></script>
+    <script src="../js/generated-assets.js"></script>
+</body>
+</html>

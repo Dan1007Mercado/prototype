@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Template Builder | TalaanScan</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <style>
+        .editor-layout { display: flex; height: calc(100vh - var(--header-height)); overflow: hidden; }
+        .toolbar-sidebar { width: 250px; background: var(--bg-surface); border-right: 1px solid var(--border-color); padding: 20px; overflow-y: auto; }
+        .question-builder-panel { flex: 1; background: #F8FAFC; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; }
+        .properties-sidebar { width: 300px; background: var(--bg-surface); border-left: 1px solid var(--border-color); padding: 20px; overflow-y: auto; }
+        
+        .builder-header { margin-bottom: 24px; }
+        .add-question-btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; background: var(--primary); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; transition: 0.2s; }
+        .add-question-btn:hover { background: var(--primary-dark); }
+        
+        .modal-overlay { 
+            display: none; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            right: 0; 
+            bottom: 0; 
+            background: rgba(0, 0, 0, 0.5); 
+            z-index: 1000; 
+            align-items: center; 
+            justify-content: center;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-content { 
+            background: white; 
+            border-radius: 12px; 
+            padding: 28px; 
+            width: 90%; 
+            max-width: 450px; 
+            box-shadow: var(--shadow-lg); 
+            animation: modalSlideIn 0.3s ease-out;
+        }
+        @keyframes modalSlideIn { 
+            from { opacity: 0; transform: scale(0.95); } 
+            to { opacity: 1; transform: scale(1); } 
+        }
+        .modal-header { margin-bottom: 20px; }
+        .modal-title { font-size: 1.25rem; font-weight: 600; color: var(--text-main); margin: 0; }
+        .modal-body { margin-bottom: 24px; }
+        .form-group { margin-bottom: 16px; }
+        .form-label { display: block; font-weight: 500; color: var(--text-main); margin-bottom: 6px; font-size: 0.9rem; }
+        .form-input, .form-select { width: 100%; padding: 10px 12px; border: 1px solid var(--border-color); border-radius: 6px; font-family: inherit; font-size: 0.9rem; }
+        .form-input:focus, .form-select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
+        .modal-actions { display: flex; gap: 12px; justify-content: flex-end; }
+        .btn { padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; transition: 0.2s; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-dark); }
+        .btn-outline { background: white; border: 1px solid var(--border-color); color: var(--text-main); }
+        .btn-outline:hover { background: #F8FAFC; }
+        
+        .questions-list { flex: 1; display: flex; flex-direction: column; gap: 12px; }
+        .empty-state { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            height: 300px; 
+            color: var(--text-muted); 
+            text-align: center;
+        }
+        .empty-state-icon { font-size: 3rem; margin-bottom: 16px; opacity: 0.5; }
+        
+        .question-card { 
+            display: flex; 
+            align-items: flex-start; 
+            gap: 12px; 
+            padding: 14px 16px; 
+            background: white; 
+            border: 1px solid var(--border-color); 
+            border-radius: 8px; 
+            transition: 0.2s;
+            animation: slideIn 0.3s ease-out;
+        }
+        .question-card:hover { 
+            border-color: var(--primary); 
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.1);
+        }
+        @keyframes slideIn { 
+            from { opacity: 0; transform: translateY(-10px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+        
+        .question-number { 
+            min-width: 40px; 
+            font-weight: 600; 
+            color: var(--primary); 
+            font-size: 0.9rem;
+            margin-top: 2px;
+        }
+        .question-content { flex: 1; }
+        .question-title { 
+            color: var(--text-main); 
+            font-weight: 500;
+            margin: 0;
+        }
+        .question-type { 
+            color: var(--text-muted); 
+            font-size: 0.85rem;
+            margin: 4px 0 0 0;
+        }
+        .question-actions { 
+            display: flex; 
+            gap: 8px; 
+            opacity: 0; 
+            transition: opacity 0.2s;
+        }
+        .question-card:hover .question-actions { opacity: 1; }
+        .question-btn { 
+            background: none; 
+            border: none; 
+            cursor: pointer; 
+            color: var(--text-muted); 
+            transition: 0.2s; 
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        .question-btn:hover { color: var(--text-main); background: #F1F5F9; }
+        .question-btn.delete:hover { color: #EF4444; }
+        
+        .tool-btn { display: flex; align-items: center; gap: 10px; width: 100%; padding: 10px; margin-bottom: 8px; border: 1px solid var(--border-color); border-radius: 6px; background: white; cursor: pointer; transition: 0.2s; color: var(--text-muted); }
+        .tool-btn:hover { border-color: var(--primary); color: var(--primary); background: #EFF6FF; }
+        
+        .toast-container { position: fixed; top: 24px; right: 24px; z-index: 2000; }
+        .toast { 
+            background: white; 
+            border-left: 4px solid var(--primary); 
+            border-radius: 8px; 
+            padding: 16px 20px; 
+            margin-bottom: 12px; 
+            box-shadow: var(--shadow-lg); 
+            min-width: 350px; 
+            animation: slideInRight 0.3s ease-out;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .toast.success { border-left-color: #10B981; }
+        .toast.error { border-left-color: #EF4444; }
+        .toast-icon { font-size: 1.25rem; }
+        .toast.success .toast-icon { color: #10B981; }
+        .toast.error .toast-icon { color: #EF4444; }
+        .toast-message { flex: 1; color: var(--text-main); font-weight: 500; }
+        .toast-close { background: none; border: none; cursor: pointer; color: var(--text-muted); transition: 0.2s; }
+        .toast-close:hover { color: var(--text-main); }
+        @keyframes slideInRight { 
+            from { opacity: 0; transform: translateX(400px); } 
+            to { opacity: 1; transform: translateX(0); } 
+        }
+        @keyframes slideOutRight { 
+            from { opacity: 1; transform: translateX(0); } 
+            to { opacity: 0; transform: translateX(400px); } 
+        }
+        .toast.removing { animation: slideOutRight 0.3s ease-out forwards; }
+    </style>
+</head>
+<body class="dashboard-layout" style="overflow: hidden;">
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <main class="main-content">
+        <header class="top-navbar">
+            <div class="breadcrumbs">
+                <a href="dashboard.html">Home</a> <i class="fas fa-chevron-right"></i>
+                <a href="templates.html">Templates</a> <i class="fas fa-chevron-right"></i>
+                <span class="current">Builder</span>
+            </div>
+            <div style="display: flex; gap: 12px;">
+                <button class="btn btn-outline btn-sm">Preview</button>
+                <button class="btn btn-primary btn-sm" id="saveTemplateBtn"><i class="fas fa-save"></i> Save Template</button>
+            </div>
+        </header>
+
+        <div class="editor-layout">
+            <div class="question-builder-panel">
+                <div class="builder-header">
+                    <button class="add-question-btn" id="addQuestionBtn">
+                        <i class="fas fa-plus"></i> Add Question
+                    </button>
+                </div>
+
+                <div class="questions-list" id="questionsList">
+                    <div class="empty-state">
+                        <div class="empty-state-icon"><i class="fas fa-inbox"></i></div>
+                        <p>No questions yet. Click + Add Question to start building.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add Question Modal -->
+            <div class="modal-overlay" id="questionModal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="modal-title">Add New Question</h2>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="form-label">Question Title / Name</label>
+                            <input type="text" class="form-input" id="questionTitle" placeholder="e.g., Age Group, Satisfaction Level...">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Question Type</label>
+                            <select class="form-select" id="questionType">
+                                <option value="">Select question type...</option>
+                                <option value="single-choice">Single Choice (Radio)</option>
+                                <option value="multiple-choice">Multiple Choice (Checkbox)</option>
+                                <option value="likert">Likert Scale</option>
+                                <option value="ocr">Handwriting / OCR Zone</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-actions">
+                        <button class="btn btn-outline" id="cancelBtn">Cancel</button>
+                        <button class="btn btn-primary" id="saveBtn">Add Question</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="properties-sidebar">
+                <h3 class="mb-4">Properties</h3>
+                <p class="text-muted text-sm">Select a component to edit its properties.</p>
+                <hr style="margin: 20px 0; border: 0; border-top: 1px solid var(--border-color);">
+                <div class="form-group mb-3">
+                    <label class="form-label">Template Name</label>
+                    <input type="text" class="form-input" id="templateName" value="Untitled_Template_1">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Page Size</label>
+                    <select class="form-select">
+                        <option>A4 (210 x 297 mm)</option>
+                        <option>Letter (8.5 x 11 in)</option>
+                        <option>Legal (8.5 x 14 in)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="../js/app.js"></script>
+    <script>
+        // Question builder management
+        let questions = [];
+
+        const questionTypeNames = {
+            'single-choice': 'Single Choice (Radio)',
+            'multiple-choice': 'Multiple Choice (Checkbox)',
+            'likert': 'Likert Scale',
+            'ocr': 'Handwriting / OCR Zone'
+        };
+
+        const addQuestionBtn = document.getElementById('addQuestionBtn');
+        const questionModal = document.getElementById('questionModal');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const saveBtn = document.getElementById('saveBtn');
+        const questionTitle = document.getElementById('questionTitle');
+        const questionType = document.getElementById('questionType');
+        const questionsList = document.getElementById('questionsList');
+
+        // Open modal
+        addQuestionBtn.addEventListener('click', () => {
+            questionModal.classList.add('active');
+            questionTitle.focus();
+        });
+
+        // Close modal
+        function closeModal() {
+            questionModal.classList.remove('active');
+            questionTitle.value = '';
+            questionType.value = '';
+        }
+
+        cancelBtn.addEventListener('click', closeModal);
+
+        // Close modal when clicking overlay
+        questionModal.addEventListener('click', (e) => {
+            if (e.target === questionModal) {
+                closeModal();
+            }
+        });
+
+        // Save question
+        saveBtn.addEventListener('click', () => {
+            const title = questionTitle.value.trim();
+            const type = questionType.value;
+
+            if (!title) {
+                showToast('Please enter a question title.', 'error');
+                return;
+            }
+
+            if (!type) {
+                showToast('Please select a question type.', 'error');
+                return;
+            }
+
+            addQuestion(title, type);
+            closeModal();
+        });
+
+        // Allow Enter key to save
+        questionTitle.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                saveBtn.click();
+            }
+        });
+
+        // Add a new question
+        function addQuestion(title, type) {
+            const question = {
+                id: Date.now(),
+                title: title,
+                type: type
+            };
+            questions.push(question);
+            renderQuestions();
+        }
+
+        // Delete a question
+        function deleteQuestion(id) {
+            questions = questions.filter(q => q.id !== id);
+            renderQuestions();
+        }
+
+        // Render the questions list
+        function renderQuestions() {
+            if (questions.length === 0) {
+                questionsList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon"><i class="fas fa-inbox"></i></div>
+                        <p>No questions yet. Click + Add Question to start building.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            questionsList.innerHTML = questions.map((q, index) => `
+                <div class="question-card">
+                    <span class="question-number">Q${index + 1}</span>
+                    <div class="question-content">
+                        <p class="question-title">${q.title}</p>
+                        <p class="question-type">${questionTypeNames[q.type]}</p>
+                    </div>
+                    <div class="question-actions">
+                        <button class="question-btn" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="question-btn delete" title="Delete" onclick="deleteQuestion(${q.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Toast notification system
+        function showToast(message, type = 'success', duration = 3000) {
+            const toastContainer = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
+            
+            toast.innerHTML = `
+                <i class="fas ${icon} toast-icon"></i>
+                <span class="toast-message">${message}</span>
+                <button class="toast-close"><i class="fas fa-times"></i></button>
+            `;
+            
+            toastContainer.appendChild(toast);
+            
+            const closeBtn = toast.querySelector('.toast-close');
+            closeBtn.addEventListener('click', () => {
+                toast.classList.add('removing');
+                setTimeout(() => toast.remove(), 300);
+            });
+            
+            setTimeout(() => {
+                toast.classList.add('removing');
+                setTimeout(() => toast.remove(), 300);
+            }, duration);
+        }
+
+        // Save template handler
+        const saveTemplateBtn = document.getElementById('saveTemplateBtn');
+        saveTemplateBtn.addEventListener('click', () => {
+            if (questions.length === 0) {
+                showToast('Please add at least one question before saving.', 'error');
+                return;
+            }
+
+            const templateName = document.getElementById('templateName').value || 'Untitled_Template_1';
+            const questionCount = questions.length;
+            const templateId = `TMPL${Date.now()}`;
+
+            // Simulate template generation
+            const message = `✓ Template "${templateName}" generated successfully! (ID: ${templateId}, ${questionCount} questions)`;
+            showToast(message, 'success', 3000);
+
+            // Redirect to templates.html after 4.5 seconds
+            setTimeout(() => {
+                window.location.href = 'templates.html';
+            }, 2000);
+        });
+
+        // Initialize
+        renderQuestions();
+    </script>
+</body>
+</html>
