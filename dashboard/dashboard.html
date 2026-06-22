@@ -9,6 +9,112 @@
     <link rel="stylesheet" href="../css/global.css">
     <link rel="stylesheet" href="../css/dashboard.css">
     <link rel="stylesheet" href="../css/components.css">
+    
+    <style>
+        /* Additional spacing for dashboard */
+        .dashboard-spacer {
+            height: 1px;
+        }
+        
+        .grid-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-top: 8px;
+        }
+        
+        .stats-grid {
+            margin-bottom: 2px;
+        }
+        
+        .content-card {
+            margin-bottom: 0;
+        }
+        
+        /* Activity list styling */
+        .activity-list {
+            display: grid;
+            gap: 12px;
+            margin-bottom: 20px;
+            min-height: 200px;
+        }
+        
+        .activity-item {
+            padding: 14px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: background 0.2s;
+        }
+        
+        .activity-item:hover {
+            background: var(--bg-main);
+        }
+        
+        .activity-item .activity-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: var(--primary-soft);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .activity-item .activity-content {
+            flex: 1;
+        }
+        
+        .activity-item .activity-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-main);
+        }
+        
+        .activity-item .activity-meta {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        
+        @media (max-width: 1024px) {
+            .grid-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+            }
+            
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start !important;
+                gap: 16px;
+            }
+            
+            .page-header > div:last-child {
+                width: 100%;
+            }
+            
+            .page-header .btn {
+                flex: 1;
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body class="dashboard-layout">
 
@@ -27,17 +133,19 @@
         </header>
 
         <div class="page-container">
+            <!-- Page Header -->
             <div class="page-header flex-between align-center mb-4">
                 <div>
                     <h1 class="page-title">Welcome back, Admin!</h1>
                     <p class="page-subtitle">Here is what's happening with your surveys today.</p>
                 </div>
-                <div style="display: flex; gap: 12px;">
+                <div style="display: flex; gap: 12px; flex-wrap: wrap;">
                     <a href="upload-questionnaire.html" class="btn btn-outline"><i class="fas fa-magic"></i> AI Convert</a>
                     <a href="create-survey.html" class="btn btn-primary"><i class="fas fa-plus"></i> New Survey</a>
                 </div>
             </div>
 
+            <!-- Stats Grid -->
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-icon" style="background: #E0E7FF; color: var(--primary);"><i class="fas fa-clipboard-list"></i></div>
@@ -69,7 +177,12 @@
                 </div>
             </div>
 
+            <!-- Spacer after stats -->
+            <div class="dashboard-spacer"></div>
+
+            <!-- Grid Layout -->
             <div class="grid-layout">
+                <!-- Recent Surveys Card -->
                 <div class="content-card">
                     <div class="flex-between mb-4">
                         <h2>Recent Surveys</h2>
@@ -90,19 +203,75 @@
                     </div>
                 </div>
 
+                <!-- Recent Activity Card -->
                 <div class="content-card">
                     <div class="flex-between mb-4">
                         <h2>Recent Activity</h2>
                         <a href="conversion-dashboard.html" class="btn btn-outline btn-sm">Queue</a>
                     </div>
                     <div id="dashboardActivity" class="activity-list"></div>
-                    <a href="upload-questionnaire.html" class="btn btn-primary w-100" style="margin-top: 20px;">Convert Questionnaire <i class="fas fa-arrow-right ml-2"></i></a>
+                    <a href="upload-questionnaire.html" class="btn btn-primary w-100" style="margin-top: 20px;">
+                        <i class="fas fa-magic"></i> Convert Questionnaire 
+                        <i class="fas fa-arrow-right" style="margin-left: 8px;"></i>
+                    </a>
                 </div>
             </div>
+
+            <!-- Spacer after grid -->
+            <div class="dashboard-spacer"></div>
         </div>
     </main>
 
     <script src="../js/app.js"></script>
-    <script src="../js/dashboard.js"></script>
+    <script>
+        // Dashboard specific functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Populate metrics from app.js state
+            if (window.TalanScan && window.TalanScan.state) {
+                const state = window.TalanScan.state;
+                
+                // Update metrics
+                const activeSurveys = state.surveys.filter(s => s.status === 'active').length;
+                const totalResponses = state.surveys.reduce((sum, s) => sum + s.responses, 0);
+                const totalTemplates = state.templates.length;
+                const totalConversions = state.conversions.length;
+                
+                document.getElementById('metricActiveSurveys').textContent = activeSurveys;
+                document.getElementById('metricResponses').textContent = totalResponses.toLocaleString();
+                document.getElementById('metricTemplates').textContent = totalTemplates;
+                document.getElementById('metricConversions').textContent = totalConversions;
+                
+                // Populate recent surveys
+                const recentSurveys = state.surveys.slice(0, 4);
+                const tbody = document.getElementById('dashboardRecentSurveys');
+                if (tbody) {
+                    tbody.innerHTML = recentSurveys.map(survey => `
+                        <tr>
+                            <td><strong>${survey.name}</strong></td>
+                            <td><span class="badge-status status-${survey.status}">${survey.status}</span></td>
+                            <td>${survey.responses.toLocaleString()}</td>
+                            <td>${survey.created}</td>
+                        </tr>
+                    `).join('');
+                }
+                
+                // Populate activity
+                const activityContainer = document.getElementById('dashboardActivity');
+                if (activityContainer && state.activity.length) {
+                    activityContainer.innerHTML = state.activity.slice(0, 4).map(activity => `
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas ${activity.icon}"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">${activity.title}</div>
+                                <div class="activity-meta">${activity.meta}</div>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            }
+        });
+    </script>
 </body>
 </html>

@@ -103,7 +103,6 @@
         ['Overview', 'dashboard.html', 'fa-home'],
         ['Surveys', 'surveys.html', 'fa-clipboard-list'],
         ['Responses', 'responses.html', 'fa-inbox'],
-        ['Analytics', 'analytics.html', 'fa-chart-line'],
         ['Conversion Queue', 'conversion-dashboard.html', 'fa-wand-magic-sparkles'],
         ['Templates', 'templates.html', 'fa-file-alt'],
         ['AI Conversion', 'upload-questionnaire.html', 'fa-qrcode'],
@@ -134,11 +133,11 @@
                 </ul>
                 <p class="nav-section-title">Conversion</p>
                 <ul class="nav-list">
-                    ${navItems.slice(5, 9).map(renderNavItem).join('')}
+                    ${navItems.slice(5, 7).map(renderNavItem).join('')}
                 </ul>
                 <p class="nav-section-title">Administration</p>
                 <ul class="nav-list">
-                    ${navItems.slice(9).map(renderNavItem).join('')}
+                    ${navItems.slice(7, 10).map(renderNavItem).join('')}
                 </ul>
             </nav>
             <div class="sidebar-footer">
@@ -275,7 +274,7 @@
                     <td>${response.enumerator}</td>
                     <td>${response.synced}</td>
                     <td><span class="${response.confidence >= 95 ? 'confidence-high' : 'confidence-med'}">${response.confidence}%${response.confidence < 90 ? ' (Review Needed)' : ''}</span></td>
-                    <td><button class="btn-icon" title="ponse" onclick="window.location.href='omr-analysis.html'"><i class="fas fa-eye text-primary"></i></button></td>
+                    <td><button class="btn-icon" title="ponse" onclick="window.location.href='anal.html'"><i class="fas fa-eye text-primary"></i></button></td>
                 </tr>
             `).join('');
         }
